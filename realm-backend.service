@@ -1,0 +1,13 @@
+[Unit]
+Description=3D Social Media Backend
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/node /var/www/realm.duckdns.com/dist/main.js
+Restart=always
+User=istiak
+Environment=NODE_ENV=production
+WorkingDirectory=/var/www/realm.duckdns.com
+
+[Install]
+WantedBy=multi-user.target
