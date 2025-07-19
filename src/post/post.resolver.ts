@@ -1,8 +1,9 @@
-import { Args, Int, Mutation, Query } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Post } from './post.entity';
 import { PostService } from './post.service';
 import { PostOutput } from './dto/post.output';
 
+@Resolver()
 export class PostResolver {
   constructor(private readonly postService: PostService) {}
 

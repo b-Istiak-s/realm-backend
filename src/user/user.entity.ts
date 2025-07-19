@@ -1,5 +1,6 @@
+import { Friend } from 'src/friend/friend.entity';
 import { Post } from 'src/post/post.entity';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 @Entity()
 export class User {
@@ -25,5 +26,12 @@ export class User {
   })
   updatedAt: Date;
 
+  @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
+
+  @OneToMany(() => Friend, (friend) => friend.requester)
+  friendshipsInitiated: Friend[];
+
+  @OneToMany(() => Friend, (friend) => friend.addressee)
+  friendshipsReceived: Friend[];
 }
