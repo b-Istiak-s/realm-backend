@@ -1,13 +1,11 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { UserOutput } from './dto/user.output';
 import { CreateUserInput } from './dto/create-user.input';
 import * as bcrypt from 'bcrypt';
-import { randomBytes } from 'crypto';
 import { AuthTokenService } from './auth/auth-token.service';
 import { LoginOutput } from './dto/login.output';
 
-@Resolver(() => UserOutput)
 export class UserResolver {
   constructor(
     private readonly userService: UserService,
