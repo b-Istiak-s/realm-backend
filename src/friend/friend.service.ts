@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Friend, FriendStatus } from './friend.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class FriendService {
-  constructor(private readonly friendRepository: Repository<Friend>) {}
+  constructor(
+    @InjectRepository(Friend)
+    private readonly friendRepository: Repository<Friend>,
+  ) {}
 
   async createFriendship(
     requesterId: number,

@@ -1,3 +1,4 @@
+import { Chat } from 'src/chat/chat.entity';
 import { Friend } from 'src/friend/friend.entity';
 import { Post } from 'src/post/post.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
@@ -26,6 +27,7 @@ export class User {
   })
   updatedAt: Date;
 
+  // ====================relations====================
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
 
@@ -34,4 +36,13 @@ export class User {
 
   @OneToMany(() => Friend, (friend) => friend.addressee)
   friendshipsReceived: Friend[];
+
+  @OneToMany(() => Chat, (chat) => chat.chatInitiator)
+  chatInitiator: Chat[];
+
+  @OneToMany(() => Chat, (chat) => chat.chatReceiver)
+  chatReceiver: Chat[];
+
+  @OneToMany(() => Chat, (chat) => chat.lastMessageSender)
+  lastSender: Chat[];
 }

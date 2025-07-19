@@ -6,6 +6,8 @@ import { graphqlConfig } from './graphql.config';
 import { PostModule } from './post/post.module';
 import { FriendModule } from './modules/friend/friend.module';
 import { FriendModule } from './friend/friend.module';
+import { ChatModule } from './chat/chat.module';
+import { ChatMessagesModule } from './chat-messages/chat-messages.module';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { FriendModule } from './friend/friend.module';
     UserModule,
     PostModule,
     FriendModule,
+    ChatModule,
+    ChatMessagesModule,
   ],
 })
 export class AppModule {}
