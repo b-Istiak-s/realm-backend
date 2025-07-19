@@ -16,7 +16,7 @@ export class Chat {
   })
   chatReceiver: User;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   lastMessage: string;
 
   @ManyToOne(() => User, (user) => user.lastSender, {
