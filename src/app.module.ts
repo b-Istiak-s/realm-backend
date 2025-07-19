@@ -7,7 +7,7 @@ import { PostModule } from './post/post.module';
 import { FriendModule } from './modules/friend/friend.module';
 import { FriendModule } from './friend/friend.module';
 import { ChatModule } from './chat/chat.module';
-import { ChatMessagesModule } from './chat-messages/chat-messages.module';
+import { ChatMessageModule } from './chat-message/chat-message.module';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { ChatMessagesModule } from './chat-messages/chat-messages.module';
     PostModule,
     FriendModule,
     ChatModule,
-    ChatMessagesModule,
+    ChatMessageModule,
   ],
 })
 export class AppModule {}

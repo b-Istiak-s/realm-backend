@@ -1,3 +1,4 @@
+import { ChatMessage } from 'src/chat-message/chat-message.entity';
 import { Chat } from 'src/chat/chat.entity';
 import { Friend } from 'src/friend/friend.entity';
 import { Post } from 'src/post/post.entity';
@@ -45,4 +46,7 @@ export class User {
 
   @OneToMany(() => Chat, (chat) => chat.lastMessageSender)
   lastSender: Chat[];
+
+  @OneToMany(() => ChatMessage, (message) => message.sender)
+  messages: ChatMessage[];
 }

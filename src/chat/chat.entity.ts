@@ -1,5 +1,12 @@
+import { ChatMessage } from 'src/chat-message/chat-message.entity';
 import { User } from 'src/user/user.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Chat {
@@ -33,4 +40,7 @@ export class Chat {
     onUpdate: 'CURRENT_TIMESTAMP',
   })
   updatedAt: Date;
+
+  @OneToMany(() => ChatMessage, (message) => message.chat)
+  messages: ChatMessage[];
 }
