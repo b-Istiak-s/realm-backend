@@ -26,8 +26,8 @@ scalar DateTime
 
 type FriendOutput {
   id: Float!
-  requester: Float!
-  addressee: Float!
+  requester: UserOutput!
+  addressee: UserOutput!
   status: String!
   createdAt: DateTime!
   updatedAt: DateTime!

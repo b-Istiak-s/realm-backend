@@ -10,12 +10,11 @@ export class FriendService {
     private readonly friendRepository: Repository<Friend>,
   ) {}
 
-  async createFriendship(addresseeId: number, req: any): Promise<Friend> {
-    const friendship = this.friendRepository.create({
-      requester: { id: req.userId },
-      addressee: { id: addresseeId },
+  async getFriendshipById(id: number): Promise<Friend | null> {
+    return this.friendRepository.findOne({
+      where: { id: id },
+      relations: ['requester', 'addressee'],
     });
-    return this.friendRepository.save(friendship);
   }
 
   async getFriendshipsByUserId(userId: number): Promise<Friend[]> {
@@ -23,6 +22,19 @@ export class FriendService {
       where: [{ requester: { id: userId } }, { addressee: { id: userId } }],
       relations: ['requester', 'addressee'],
     });
+  }
+
+  async createFriendship(
+    addresseeId: number,
+    req: any,
+  ): Promise<Friend | null> {
+    const friendship = this.friendRepository.create({
+      requester: { id: req.userId },
+      addressee: { id: addresseeId },
+    });
+    await this.friendRepository.save(friendship);
+
+    return this.getFriendshipById(friendship.id);
   }
 
   async updateFriendshipStatus(id: number, status: string): Promise<Friend> {

@@ -1,15 +1,16 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { UserOutput } from 'src/user/dto/user.output';
 
 @ObjectType()
 export class FriendOutput {
   @Field(() => Number)
   id: number;
 
-  @Field(() => Number)
-  requester: number;
+  @Field(() => UserOutput)
+  requester: UserOutput;
 
-  @Field(() => Number)
-  addressee: number;
+  @Field(() => UserOutput)
+  addressee: UserOutput;
 
   @Field(() => String)
   status: string;
