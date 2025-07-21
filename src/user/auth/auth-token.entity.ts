@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from '../user.entity';
 
 @Entity()
 export class AuthToken {
@@ -8,8 +9,8 @@ export class AuthToken {
   @Column({ unique: true })
   token: string;
 
-  @Column()
-  userId: number;
+  @ManyToOne(() => User, (user) => user.tokens, { nullable: false })
+  user: User;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

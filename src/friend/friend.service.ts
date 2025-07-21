@@ -10,12 +10,9 @@ export class FriendService {
     private readonly friendRepository: Repository<Friend>,
   ) {}
 
-  async createFriendship(
-    requesterId: number,
-    addresseeId: number,
-  ): Promise<Friend> {
+  async createFriendship(addresseeId: number, req: any): Promise<Friend> {
     const friendship = this.friendRepository.create({
-      requester: { id: requesterId },
+      requester: { id: req.userId },
       addressee: { id: addresseeId },
     });
     return this.friendRepository.save(friendship);

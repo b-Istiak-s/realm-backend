@@ -13,7 +13,7 @@ export class AuthTokenService {
 
   async createToken(userId: number): Promise<string> {
     const token = new AuthToken();
-    token.userId = userId;
+    token.user.id = userId;
     token.token = randomBytes(32).toString('hex');
     await this.authTokenRepo.save(token);
     return token.token;

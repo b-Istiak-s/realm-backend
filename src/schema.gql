@@ -24,11 +24,21 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type FriendOutput {
+  id: Float!
+  requester: Float!
+  addressee: Float!
+  status: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Query {
   users(limit: Int = 10, offset: Int = 0): [UserOutput!]!
   user(id: Int!): UserOutput
   posts: [PostOutput!]!
   post(id: Int!): PostOutput
+  friendships(userId: Int!): [FriendOutput!]!
 }
 
 type Mutation {
@@ -37,6 +47,8 @@ type Mutation {
   createPost(body: String!): PostOutput!
   updatePost(id: Int!, body: String!): PostOutput
   deletePost(id: Int!): Boolean!
+  createFriendship(addresseeId: Int!): FriendOutput!
+  updateFriendshipStatus(id: Int!, status: String!): FriendOutput!
 }
 
 input CreateUserInput {

@@ -3,6 +3,7 @@ import { Chat } from 'src/chat/chat.entity';
 import { Friend } from 'src/friend/friend.entity';
 import { Post } from 'src/post/post.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { AuthToken } from './auth/auth-token.entity';
 
 @Entity()
 export class User {
@@ -29,6 +30,9 @@ export class User {
   updatedAt: Date;
 
   // ====================relations====================
+  @OneToMany(() => AuthToken, (token) => token.user)
+  tokens: AuthToken[];
+
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
 
@@ -45,7 +49,7 @@ export class User {
   chatReceiver: Chat[];
 
   @OneToMany(() => Chat, (chat) => chat.lastMessageSender)
-  lastSender: Chat[];
+  lastMessageSender: Chat[];
 
   @OneToMany(() => ChatMessage, (message) => message.sender)
   messages: ChatMessage[];

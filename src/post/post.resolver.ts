@@ -2,6 +2,8 @@ import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Post } from './post.entity';
 import { PostService } from './post.service';
 import { PostOutput } from './dto/post.output';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from 'src/shared/guards/auth.guard';
 
 @Resolver()
 export class PostResolver {
@@ -19,11 +21,13 @@ export class PostResolver {
   }
 
   // Mutations
+  @UseGuards(AuthGuard)
   @Mutation(() => PostOutput)
   async createPost(@Args('body') body: string) {
     return this.postService.createPost(body);
   }
 
+  @UseGuards(AuthGuard)
   @Mutation(() => PostOutput, { nullable: true })
   async updatePost(
     @Args('id', { type: () => Int }) id: number,
@@ -32,6 +36,7 @@ export class PostResolver {
     return this.postService.updatePost(id, body);
   }
 
+  @UseGuards(AuthGuard)
   @Mutation(() => Boolean)
   async deletePost(@Args('id', { type: () => Int }) id: number) {
     await this.postService.deletePost(id);

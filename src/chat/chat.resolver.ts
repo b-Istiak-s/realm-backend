@@ -1,7 +1,10 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ChatService } from './chat.service';
 import { ChatOutput } from './dto/chat.output';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from 'src/shared/guards/auth.guard';
 
+@UseGuards(AuthGuard)
 @Resolver()
 export class ChatResolver {
   constructor(private readonly chatService: ChatService) {}

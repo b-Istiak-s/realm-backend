@@ -12,11 +12,11 @@ export class ChatOutput {
   @Field(() => User)
   chatReceiver: User;
 
-  @Field()
+  @Field({ nullable: true })
   lastMessage?: string;
 
   @Field(() => User, { nullable: true })
-  lastMessageSender?: User;
+  lastMessageSender: User | null;
 
   @Field(() => Date)
   createdAt: Date;
