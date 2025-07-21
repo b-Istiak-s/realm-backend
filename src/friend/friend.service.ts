@@ -37,12 +37,17 @@ export class FriendService {
     return this.getFriendshipById(friendship.id);
   }
 
-  async updateFriendshipStatus(id: number, status: string): Promise<Friend> {
+  async updateFriendshipStatus(
+    id: number,
+    status: string,
+  ): Promise<Friend | null> {
     const friendship = await this.friendRepository.findOneBy({ id });
     if (!friendship) {
       throw new Error('Friendship not found');
     }
     friendship.status = status as FriendStatus;
-    return this.friendRepository.save(friendship);
+    await this.friendRepository.save(friendship);
+
+    return this.getFriendshipById(friendship.id);
   }
 }
