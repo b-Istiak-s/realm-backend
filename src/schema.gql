@@ -12,6 +12,11 @@ type LoginOutput {
   accessToken: String!
 }
 
+type UserPaginatedOutput {
+  users: [UserOutput!]!
+  total: Int!
+}
+
 type PostOutput {
   id: Int!
   body: String!
@@ -53,7 +58,7 @@ type ChatMessageOutput {
 }
 
 type Query {
-  users(limit: Int = 10, offset: Int = 0): [UserOutput!]!
+  usersPaginated(limit: Int = 10, offset: Int = 0): UserPaginatedOutput!
   user(id: Int!): UserOutput
   posts: [PostOutput!]!
   post(id: Int!): PostOutput
