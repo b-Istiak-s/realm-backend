@@ -2,6 +2,7 @@ import { Args, Context, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Post } from './post.entity';
 import { PostService } from './post.service';
 import { PostOutput } from './dto/post.output';
+import { PostPaginatedOutput } from './dto/post-paginated.output';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/shared/guards/auth.guard';
 
@@ -10,9 +11,23 @@ export class PostResolver {
   constructor(private readonly postService: PostService) {}
 
   // Queries
-  @Query(() => [PostOutput], { name: 'posts' })
-  async getPosts() {
-    return this.postService.getPosts();
+  @Query(() => PostPaginatedOutput, { name: 'posts' })
+  async getPosts(
+    @Args('limit', { type: () => Int, nullable: true, defaultValue: 10 }) limit: number,
+    @Args('offset', { type: () => Int, nullable: true, defaultValue: 0 }) offset: number,
+  ): Promise<PostPaginatedOutput> {
+    const { posts, total } = await this.postService.getPosts(limit, offset);
+    return { posts, total };
+  }
+
+  @Query(() => PostPaginatedOutput, { name: 'postsByUser' })
+  async getPostByUserId(
+    @Args('userId', { type: () => Int }) userId: number,
+    @Args('limit', { type: () => Int, nullable: true, defaultValue: 10 }) limit: number,
+    @Args('offset', { type: () => Int, nullable: true, defaultValue: 0 }) offset: number,
+  ): Promise<PostPaginatedOutput> {
+    const { posts, total } = await this.postService.getPostByUserId(userId, limit, offset);
+    return { posts, total };
   }
 
   @Query(() => PostOutput, { name: 'post', nullable: true })

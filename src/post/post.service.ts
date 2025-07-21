@@ -15,12 +15,21 @@ export class PostService {
     return this.postRepo.save(post);
   }
 
-  async getPosts(): Promise<Post[]> {
-    return this.postRepo.find();
+  async getPosts(limit: number, offset: number): Promise<{ posts: Post[]; total: number }> {
+    const [posts, total] = await this.postRepo.findAndCount({
+      take: limit,
+      skip: offset,
+    });
+    return { posts, total };
   }
 
-  async getPostByUserId(userId: number): Promise<Post[]> {
-    return this.postRepo.find({ where: { user: { id: userId } } });
+  async getPostByUserId(userId: number, limit: number, offset: number): Promise<{ posts: Post[]; total: number }> {
+    const [posts, total] = await this.postRepo.findAndCount({
+      where: { user: { id: userId } },
+      take: limit,
+      skip: offset,
+    });
+    return { posts, total };
   }
 
   async getPostById(id: number): Promise<Post | null> {
