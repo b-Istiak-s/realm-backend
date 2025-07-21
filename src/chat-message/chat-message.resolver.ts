@@ -9,7 +9,7 @@ import { UseGuards } from '@nestjs/common';
 export class ChatMessageResolver {
   constructor(private readonly chatMessageService: ChatMessageService) {}
 
-  @Query(() => [ChatMessageOutput], { name: 'chat-message' })
+  @Query(() => [ChatMessageOutput], { name: 'chatMessage' })
   async getChatMessageByChatId(
     @Args('chatId') chatId: number,
   ): Promise<ChatMessageOutput[]> {

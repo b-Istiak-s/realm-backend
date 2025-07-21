@@ -17,7 +17,7 @@ import { AuthModule } from './shared/guards/auth.module';
     PostModule,
     FriendModule,
     ChatModule,
-    // ChatMessageModule,
+    ChatMessageModule,
   ],
 })
 export class AppModule {}

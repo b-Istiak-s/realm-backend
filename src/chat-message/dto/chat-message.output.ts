@@ -1,17 +1,18 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Chat } from 'src/chat/chat.entity';
-import { User } from 'src/user/user.entity';
+import { ChatOutput } from 'src/chat/dto/chat.output';
+import { UserOutput } from 'src/user/dto/user.output';
 
 @ObjectType()
 export class ChatMessageOutput {
   @Field(() => Int)
   id: number;
 
-  @Field(() => Chat)
-  chat: Chat;
+  @Field(() => ChatOutput)
+  chat: ChatOutput;
 
-  @Field(() => User)
-  sender: User;
+  @Field(() => UserOutput)
+  sender: UserOutput;
 
   @Field(() => String)
   message: String;

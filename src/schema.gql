@@ -43,6 +43,15 @@ type ChatOutput {
   updatedAt: DateTime!
 }
 
+type ChatMessageOutput {
+  id: Int!
+  chat: ChatOutput!
+  sender: UserOutput!
+  message: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Query {
   users(limit: Int = 10, offset: Int = 0): [UserOutput!]!
   user(id: Int!): UserOutput
@@ -50,6 +59,7 @@ type Query {
   post(id: Int!): PostOutput
   friendships(userId: Int!): [FriendOutput!]!
   chats(userId: Float!): [ChatOutput!]!
+  chatMessage(chatId: Float!): [ChatMessageOutput!]!
 }
 
 type Mutation {
