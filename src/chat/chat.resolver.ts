@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ChatService } from './chat.service';
 import { ChatOutput } from './dto/chat.output';
 import { UseGuards } from '@nestjs/common';
@@ -18,10 +18,10 @@ export class ChatResolver {
 
   @Mutation(() => ChatOutput)
   async createChat(
-    @Args('chatInitiatorId') chatInitiatorId: number,
     @Args('chatReceiverId') chatReceiverId: number,
-  ): Promise<ChatOutput> {
-    return this.chatService.createChat(chatInitiatorId, chatReceiverId);
+    @Context('req') req: any,
+  ): Promise<ChatOutput | null> {
+    return this.chatService.createChat(chatReceiverId, req);
   }
 
   @Mutation(() => ChatOutput)

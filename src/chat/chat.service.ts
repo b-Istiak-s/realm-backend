@@ -11,15 +11,11 @@ export class ChatService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  async createChat(
-    chatInitiatorId: number,
-    chatReceiverId: number,
-  ): Promise<Chat> {
-    const chat = this.chatRepository.create({
-      chatInitiator: { id: chatInitiatorId },
-      chatReceiver: { id: chatReceiverId },
+  async getChatbyId(id: number): Promise<Chat | null> {
+    return this.chatRepository.findOne({
+      where: { id: id },
+      relations: ['chatInitiator', 'chatReceiver'],
     });
-    return this.chatRepository.save(chat);
   }
 
   async getChatsByUserId(userId: number): Promise<Chat[]> {
@@ -30,6 +26,15 @@ export class ChatService {
       ],
       relations: ['chatInitiator', 'chatReceiver'],
     });
+  }
+  async createChat(chatReceiverId: number, req: any): Promise<Chat | null> {
+    const chat = this.chatRepository.create({
+      chatInitiator: { id: req.userId },
+      chatReceiver: { id: chatReceiverId },
+    });
+    await this.chatRepository.save(chat);
+
+    return this.getChatbyId(chat.id);
   }
 
   async updateChat(

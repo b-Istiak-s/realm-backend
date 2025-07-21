@@ -70,7 +70,7 @@ type Mutation {
   deletePost(id: Int!): Boolean!
   createFriendship(addresseeId: Int!): FriendOutput!
   updateFriendshipStatus(id: Int!, status: String!): FriendOutput!
-  createChat(chatInitiatorId: Float!, chatReceiverId: Float!): ChatOutput!
+  createChat(chatReceiverId: Float!): ChatOutput!
   updateChat(id: Float!, lastMessage: String!, lastMessageSenderId: Float!): ChatOutput!
 }
 
