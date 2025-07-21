@@ -10,8 +10,8 @@ export class PostService {
     private readonly postRepo: Repository<Post>,
   ) {}
 
-  async createPost(body: string): Promise<Post> {
-    const post = this.postRepo.create({ body });
+  async createPost(body: string, req: any): Promise<Post> {
+    const post = this.postRepo.create({ body: body, user: { id: req.userId } });
     return this.postRepo.save(post);
   }
 

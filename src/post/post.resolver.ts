@@ -1,4 +1,4 @@
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Post } from './post.entity';
 import { PostService } from './post.service';
 import { PostOutput } from './dto/post.output';
@@ -23,8 +23,8 @@ export class PostResolver {
   // Mutations
   @UseGuards(AuthGuard)
   @Mutation(() => PostOutput)
-  async createPost(@Args('body') body: string) {
-    return this.postService.createPost(body);
+  async createPost(@Args('body') body: string, @Context('req') req: any) {
+    return this.postService.createPost(body, req);
   }
 
   @UseGuards(AuthGuard)

@@ -20,6 +20,9 @@ export class AuthTokenService {
   }
 
   async validateToken(token: string): Promise<AuthToken | null> {
-    return this.authTokenRepo.findOne({ where: { token } });
+    return this.authTokenRepo.findOne({
+      where: { token },
+      relations: ['user'],
+    });
   }
 }
