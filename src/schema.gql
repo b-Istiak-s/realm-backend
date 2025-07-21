@@ -33,12 +33,23 @@ type FriendOutput {
   updatedAt: DateTime!
 }
 
+type ChatOutput {
+  id: Int!
+  chatInitiator: UserOutput!
+  chatReceiver: UserOutput!
+  lastMessage: String
+  lastMessageSender: UserOutput
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Query {
   users(limit: Int = 10, offset: Int = 0): [UserOutput!]!
   user(id: Int!): UserOutput
   posts: [PostOutput!]!
   post(id: Int!): PostOutput
   friendships(userId: Int!): [FriendOutput!]!
+  chats(userId: Float!): [ChatOutput!]!
 }
 
 type Mutation {
@@ -49,6 +60,8 @@ type Mutation {
   deletePost(id: Int!): Boolean!
   createFriendship(addresseeId: Int!): FriendOutput!
   updateFriendshipStatus(id: Int!, status: String!): FriendOutput!
+  createChat(chatInitiatorId: Float!, chatReceiverId: Float!): ChatOutput!
+  updateChat(id: Float!, lastMessage: String!, lastMessageSenderId: Float!): ChatOutput!
 }
 
 input CreateUserInput {

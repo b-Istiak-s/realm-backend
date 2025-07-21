@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { UserOutput } from 'src/user/dto/user.output';
 import { User } from 'src/user/user.entity';
 
 @ObjectType()
@@ -6,17 +7,17 @@ export class ChatOutput {
   @Field(() => Int)
   id: number;
 
-  @Field(() => User)
-  chatInitiator: User;
+  @Field(() => UserOutput)
+  chatInitiator: UserOutput;
 
-  @Field(() => User)
-  chatReceiver: User;
+  @Field(() => UserOutput)
+  chatReceiver: UserOutput;
 
   @Field({ nullable: true })
   lastMessage?: string;
 
-  @Field(() => User, { nullable: true })
-  lastMessageSender: User | null;
+  @Field(() => UserOutput, { nullable: true })
+  lastMessageSender: UserOutput | null;
 
   @Field(() => Date)
   createdAt: Date;
