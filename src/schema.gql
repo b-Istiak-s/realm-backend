@@ -58,6 +58,11 @@ type ChatOutput {
   updatedAt: DateTime!
 }
 
+type ChatPaginatedOutput {
+  chats: [ChatOutput!]!
+  total: Int!
+}
+
 type ChatMessageOutput {
   id: Int!
   chat: ChatOutput!
@@ -67,6 +72,11 @@ type ChatMessageOutput {
   updatedAt: DateTime!
 }
 
+type ChatMessagePaginatedOutput {
+  messages: [ChatMessageOutput!]!
+  total: Int!
+}
+
 type Query {
   usersPaginated(limit: Int = 10, offset: Int = 0): UserPaginatedOutput!
   user(id: Int!): UserOutput
@@ -74,8 +84,8 @@ type Query {
   postsByUser(userId: Int!, limit: Int = 10, offset: Int = 0): PostPaginatedOutput!
   post(id: Int!): PostOutput
   friendships(userId: Int!, limit: Int = 10, offset: Int = 0): FriendPaginatedOutput!
-  chats(userId: Float!): [ChatOutput!]!
-  chatMessage(chatId: Float!): [ChatMessageOutput!]!
+  chats(userId: Float!, limit: Int = 10, offset: Int = 0): ChatPaginatedOutput!
+  chatMessages(chatId: Float!, limit: Int = 10, offset: Int = 0): ChatMessagePaginatedOutput!
 }
 
 type Mutation {

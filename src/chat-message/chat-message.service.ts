@@ -24,11 +24,18 @@ export class ChatMessageService {
     return this.chatMessageRepository.save(chatMessage);
   }
 
-  async getMessagesByChatId(chatId: number): Promise<ChatMessageOutput[]> {
-    return this.chatMessageRepository.find({
+  async getMessagesByChatId(
+    chatId: number,
+    limit: number,
+    offset: number,
+  ): Promise<{ messages: ChatMessage[]; total: number }> {
+    const [messages, total] = await this.chatMessageRepository.findAndCount({
       where: { chat: { id: chatId } },
       relations: ['chat', 'sender'],
       order: { createdAt: 'ASC' },
+      take: limit,
+      skip: offset,
     });
+    return { messages, total };
   }
 }

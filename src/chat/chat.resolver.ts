@@ -1,19 +1,23 @@
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver, Int } from '@nestjs/graphql';
 import { ChatService } from './chat.service';
 import { ChatOutput } from './dto/chat.output';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/shared/guards/auth.guard';
+import { ChatPaginatedOutput } from './dto/chat-paginated.output';
 
 @UseGuards(AuthGuard)
 @Resolver()
 export class ChatResolver {
   constructor(private readonly chatService: ChatService) {}
 
-  @Query(() => [ChatOutput], { name: 'chats' })
+  @Query(() => ChatPaginatedOutput, { name: 'chats' })
   async getChatsByUserId(
     @Args('userId') userId: number,
-  ): Promise<ChatOutput[]> {
-    return this.chatService.getChatsByUserId(userId);
+    @Args('limit', { type: () => Int, nullable: true, defaultValue: 10 }) limit: number,
+    @Args('offset', { type: () => Int, nullable: true, defaultValue: 0 }) offset: number,
+  ): Promise<ChatPaginatedOutput> {
+    const { chats, total } = await this.chatService.getChatsByUserId(userId, limit, offset);
+    return { chats, total };
   }
 
   @Mutation(() => ChatOutput)
