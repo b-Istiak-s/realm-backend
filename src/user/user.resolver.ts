@@ -5,6 +5,7 @@ import { CreateUserInput } from './dto/create-user.input';
 import * as bcrypt from 'bcrypt';
 import { AuthTokenService } from './auth/auth-token.service';
 import { LoginOutput } from './dto/login.output';
+import { UserPaginatedOutput } from './dto/user-paginated.output';
 
 @Resolver()
 export class UserResolver {
@@ -14,14 +15,18 @@ export class UserResolver {
   ) {}
 
   // Queries
-  @Query(() => [UserOutput], { name: 'users' })
-  async getUsers(
+  @Query(() => UserPaginatedOutput, { name: 'usersPaginated' })
+  async getUsersPaginated(
     @Args('limit', { type: () => Int, nullable: true, defaultValue: 10 })
     limit: number,
     @Args('offset', { type: () => Int, nullable: true, defaultValue: 0 })
     offset: number,
-  ) {
-    return this.userService.findAll({ limit, offset });
+  ): Promise<UserPaginatedOutput> {
+    const { users, total } = await this.userService.findAllWithCount({
+      limit,
+      offset,
+    });
+    return { users, total };
   }
 
   @Query(() => UserOutput, { name: 'user', nullable: true })
