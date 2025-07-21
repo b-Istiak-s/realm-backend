@@ -12,17 +12,18 @@ export class UserService {
     private readonly userRepo: Repository<User>,
   ) {}
 
-  async findAll({
+  async findAllWithCount({
     limit,
     offset,
   }: {
     limit: number;
     offset: number;
-  }): Promise<User[]> {
-    return this.userRepo.find({
+  }): Promise<{ users: User[]; total: number }> {
+    const [users, total] = await this.userRepo.findAndCount({
       take: limit,
       skip: offset,
     });
+    return { users, total };
   }
 
   async findOne(id: number): Promise<User | null> {

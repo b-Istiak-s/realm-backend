@@ -18,14 +18,17 @@ export class ChatService {
     });
   }
 
-  async getChatsByUserId(userId: number): Promise<Chat[]> {
-    return this.chatRepository.find({
+  async getChatsByUserId(userId: number, limit: number, offset: number): Promise<{ chats: Chat[]; total: number }> {
+    const [chats, total] = await this.chatRepository.findAndCount({
       where: [
         { chatInitiator: { id: userId } },
         { chatReceiver: { id: userId } },
       ],
       relations: ['chatInitiator', 'chatReceiver'],
+      take: limit,
+      skip: offset,
     });
+    return { chats, total };
   }
   async createChat(chatReceiverId: number, req: any): Promise<Chat | null> {
     const chat = this.chatRepository.create({

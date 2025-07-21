@@ -12,6 +12,11 @@ type LoginOutput {
   accessToken: String!
 }
 
+type UserPaginatedOutput {
+  users: [UserOutput!]!
+  total: Int!
+}
+
 type PostOutput {
   id: Int!
   body: String!
@@ -24,6 +29,11 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type PostPaginatedOutput {
+  posts: [PostOutput!]!
+  total: Int!
+}
+
 type FriendOutput {
   id: Float!
   requester: UserOutput!
@@ -31,6 +41,11 @@ type FriendOutput {
   status: String!
   createdAt: DateTime!
   updatedAt: DateTime!
+}
+
+type FriendPaginatedOutput {
+  friendships: [FriendOutput!]!
+  total: Int!
 }
 
 type ChatOutput {
@@ -43,6 +58,11 @@ type ChatOutput {
   updatedAt: DateTime!
 }
 
+type ChatPaginatedOutput {
+  chats: [ChatOutput!]!
+  total: Int!
+}
+
 type ChatMessageOutput {
   id: Int!
   chat: ChatOutput!
@@ -52,14 +72,20 @@ type ChatMessageOutput {
   updatedAt: DateTime!
 }
 
+type ChatMessagePaginatedOutput {
+  messages: [ChatMessageOutput!]!
+  total: Int!
+}
+
 type Query {
-  users(limit: Int = 10, offset: Int = 0): [UserOutput!]!
+  usersPaginated(limit: Int = 10, offset: Int = 0): UserPaginatedOutput!
   user(id: Int!): UserOutput
-  posts: [PostOutput!]!
+  posts(limit: Int = 10, offset: Int = 0): PostPaginatedOutput!
+  postsByUser(userId: Int!, limit: Int = 10, offset: Int = 0): PostPaginatedOutput!
   post(id: Int!): PostOutput
-  friendships(userId: Int!): [FriendOutput!]!
-  chats(userId: Float!): [ChatOutput!]!
-  chatMessage(chatId: Float!): [ChatMessageOutput!]!
+  friendships(userId: Int!, limit: Int = 10, offset: Int = 0): FriendPaginatedOutput!
+  chats(userId: Float!, limit: Int = 10, offset: Int = 0): ChatPaginatedOutput!
+  chatMessages(chatId: Float!, limit: Int = 10, offset: Int = 0): ChatMessagePaginatedOutput!
 }
 
 type Mutation {

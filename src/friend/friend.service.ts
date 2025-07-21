@@ -17,11 +17,14 @@ export class FriendService {
     });
   }
 
-  async getFriendshipsByUserId(userId: number): Promise<Friend[]> {
-    return this.friendRepository.find({
+  async getFriendshipsByUserId(userId: number, limit: number, offset: number): Promise<{ friendships: Friend[]; total: number }> {
+    const [friendships, total] = await this.friendRepository.findAndCount({
       where: [{ requester: { id: userId } }, { addressee: { id: userId } }],
       relations: ['requester', 'addressee'],
+      take: limit,
+      skip: offset,
     });
+    return { friendships, total };
   }
 
   async createFriendship(
