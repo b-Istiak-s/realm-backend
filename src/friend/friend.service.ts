@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Friend, FriendStatus } from './friend.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -17,7 +17,11 @@ export class FriendService {
     });
   }
 
-  async getFriendshipsByUserId(userId: number, limit: number, offset: number): Promise<{ friendships: Friend[]; total: number }> {
+  async getFriendshipsByUserId(
+    userId: number,
+    limit: number,
+    offset: number,
+  ): Promise<{ friendships: Friend[]; total: number }> {
     const [friendships, total] = await this.friendRepository.findAndCount({
       where: [{ requester: { id: userId } }, { addressee: { id: userId } }],
       relations: ['requester', 'addressee'],
@@ -25,6 +29,21 @@ export class FriendService {
       skip: offset,
     });
     return { friendships, total };
+  }
+
+  // firstUser is requester and secondUser is addressee
+  // firstUser -> secondUser and secondUser -> firstUser are considered same
+  async existFriendship(
+    firstUser: number,
+    secondUser: number,
+  ): Promise<boolean> {
+    const exist = await this.friendRepository.findOne({
+      where: [
+        { requester: { id: firstUser }, addressee: { id: secondUser } },
+        { requester: { id: secondUser }, addressee: { id: firstUser } },
+      ],
+    });
+    return exist !== null; // checks if the "relationship" is found
   }
 
   async createFriendship(
@@ -35,6 +54,12 @@ export class FriendService {
       requester: { id: req.userId },
       addressee: { id: addresseeId },
     });
+
+    const existFriendship = await this.existFriendship(req.userId, addresseeId);
+    if (existFriendship) {
+      throw new ConflictException('Already found the friend or pending');
+    }
+
     await this.friendRepository.save(friendship);
 
     return this.getFriendshipById(friendship.id);
