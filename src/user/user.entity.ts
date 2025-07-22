@@ -1,6 +1,6 @@
 import { ChatMessage } from 'src/chat-message/chat-message.entity';
 import { Chat } from 'src/chat/chat.entity';
-import { Friend } from 'src/friend/friend.entity';
+import { Relation } from 'src/relation/relation.entity';
 import { Post } from 'src/post/post.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { AuthToken } from './auth/auth-token.entity';
@@ -36,11 +36,11 @@ export class User {
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
 
-  @OneToMany(() => Friend, (friend) => friend.requester)
-  friendshipsInitiated: Friend[];
+  @OneToMany(() => Relation, (relation) => relation.requester)
+  relationshipsInitiated: Relation[];
 
-  @OneToMany(() => Friend, (friend) => friend.addressee)
-  friendshipsReceived: Friend[];
+  @OneToMany(() => Relation, (relation) => relation.addressee)
+  relationshipsReceived: Relation[];
 
   @OneToMany(() => Chat, (chat) => chat.chatInitiator)
   chatInitiator: Chat[];

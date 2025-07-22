@@ -34,8 +34,8 @@ type PostPaginatedOutput {
   total: Int!
 }
 
-type FriendOutput {
-  id: Float!
+type RelationOutput {
+  id: Int!
   requester: UserOutput!
   addressee: UserOutput!
   status: String!
@@ -43,8 +43,8 @@ type FriendOutput {
   updatedAt: DateTime!
 }
 
-type FriendPaginatedOutput {
-  friendships: [FriendOutput!]!
+type RelationPaginatedOutput {
+  relationships: [RelationOutput!]!
   total: Int!
 }
 
@@ -83,7 +83,7 @@ type Query {
   posts(limit: Int = 10, offset: Int = 0): PostPaginatedOutput!
   postsByUser(userId: Int!, limit: Int = 10, offset: Int = 0): PostPaginatedOutput!
   post(id: Int!): PostOutput
-  friendships(userId: Int!, limit: Int = 10, offset: Int = 0): FriendPaginatedOutput!
+  relationships(userId: Int!, limit: Int = 10, offset: Int = 0): RelationPaginatedOutput!
   chats(userId: Float!, limit: Int = 10, offset: Int = 0): ChatPaginatedOutput!
   chatMessages(chatId: Float!, limit: Int = 10, offset: Int = 0): ChatMessagePaginatedOutput!
 }
@@ -94,8 +94,8 @@ type Mutation {
   createPost(body: String!): PostOutput!
   updatePost(id: Int!, body: String!): PostOutput
   deletePost(id: Int!): Boolean!
-  createFriendship(addresseeId: Int!): FriendOutput!
-  updateFriendshipStatus(id: Int!, status: String!): FriendOutput!
+  createRelationship(addresseeId: Int!): RelationOutput!
+  updateRelationshipStatus(id: Int!, status: String!): RelationOutput!
   createChat(chatReceiverId: Float!): ChatOutput!
   updateChat(id: Float!, lastMessage: String!, lastMessageSenderId: Float!): ChatOutput!
 }
