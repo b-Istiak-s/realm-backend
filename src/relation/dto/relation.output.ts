@@ -1,9 +1,9 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { UserOutput } from 'src/user/dto/user.output';
 
 @ObjectType()
 export class RelationOutput {
-  @Field(() => Number)
+  @Field(() => Int)
   id: number;
 
   @Field(() => UserOutput)
