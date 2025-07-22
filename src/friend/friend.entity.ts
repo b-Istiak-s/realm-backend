@@ -1,5 +1,11 @@
 import { User } from 'src/user/user.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  Unique,
+} from 'typeorm';
 
 export enum FriendStatus {
   PENDING = 'pending',
@@ -7,6 +13,7 @@ export enum FriendStatus {
 }
 
 @Entity()
+@Unique(['requester', 'addressee'])
 export class Friend {
   @PrimaryGeneratedColumn()
   id: number;
