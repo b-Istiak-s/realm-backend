@@ -2,7 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { UserOutput } from 'src/user/dto/user.output';
 
 @ObjectType()
-export class FriendOutput {
+export class RelationOutput {
   @Field(() => Number)
   id: number;
 
