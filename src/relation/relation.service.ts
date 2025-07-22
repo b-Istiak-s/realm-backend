@@ -1,4 +1,9 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Relation, RelationStatus } from './relation.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -55,7 +60,10 @@ export class RelationService {
       addressee: { id: addresseeId },
     });
 
-    const existRelationship = await this.existRelationship(req.userId, addresseeId);
+    const existRelationship = await this.existRelationship(
+      req.userId,
+      addresseeId,
+    );
     if (existRelationship) {
       throw new ConflictException('Already found the relation or pending');
     }
@@ -71,11 +79,14 @@ export class RelationService {
   ): Promise<Relation | null> {
     const relationship = await this.relationRepository.findOneBy({ id });
     if (!relationship) {
-      throw new Error('Relationship not found');
+      throw new NotFoundException('Relationship not found');
+    }
+    if (!Object.values(RelationStatus).includes(status as RelationStatus)) {
+      throw new BadRequestException('Invalid relationship status');
     }
     relationship.status = status as RelationStatus;
     await this.relationRepository.save(relationship);
 
     return this.getRelationshipById(relationship.id);
   }
-} 
+}
