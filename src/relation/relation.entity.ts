@@ -20,11 +20,13 @@ export class Relation {
 
   @ManyToOne(() => User, (user) => user.relationshipsInitiated, {
     nullable: false,
+    onDelete: 'CASCADE',
   })
   requester: User;
 
   @ManyToOne(() => User, (user) => user.relationshipsReceived, {
     nullable: false,
+    onDelete: 'CASCADE',
   })
   addressee: User;
 
@@ -44,4 +46,4 @@ export class Relation {
     onUpdate: 'CURRENT_TIMESTAMP',
   })
   updatedAt: Date;
-} 
+}
