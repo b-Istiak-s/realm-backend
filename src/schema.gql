@@ -4,7 +4,7 @@
 
 type UserOutput {
   id: Int!
-  name: String!
+  name: String
   username: String!
   email: String!
   image: String

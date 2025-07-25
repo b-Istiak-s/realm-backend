@@ -5,7 +5,7 @@ export class UserOutput {
   @Field(() => Int)
   id: number;
 
-  @Field()
+  @Field({ nullable: true })
   name: string;
 
   @Field()
