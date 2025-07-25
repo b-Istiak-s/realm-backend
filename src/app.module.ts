@@ -4,7 +4,7 @@ import { UserModule } from './user/user.module';
 import { DatabaseModule } from './database/database.module';
 import { graphqlConfig } from './graphql.config';
 import { PostModule } from './post/post.module';
-import { FriendModule } from './friend/friend.module';
+import { RelationModule } from './relation/relation.module';
 import { ChatModule } from './chat/chat.module';
 import { ChatMessageModule } from './chat-message/chat-message.module';
 import { AuthModule } from './shared/guards/auth.module';
@@ -15,7 +15,7 @@ import { AuthModule } from './shared/guards/auth.module';
     GraphQLModule.forRoot(graphqlConfig),
     UserModule,
     PostModule,
-    FriendModule,
+    RelationModule,
     ChatModule,
     ChatMessageModule,
   ],

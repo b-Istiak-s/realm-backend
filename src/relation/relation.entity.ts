@@ -7,33 +7,35 @@ import {
   Unique,
 } from 'typeorm';
 
-export enum FriendStatus {
+export enum RelationStatus {
   PENDING = 'pending',
   ACCEPTED = 'accepted',
 }
 
 @Entity()
 @Unique(['requester', 'addressee'])
-export class Friend {
+export class Relation {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (user) => user.friendshipsInitiated, {
+  @ManyToOne(() => User, (user) => user.relationshipsInitiated, {
     nullable: false,
+    onDelete: 'CASCADE',
   })
   requester: User;
 
-  @ManyToOne(() => User, (user) => user.friendshipsReceived, {
+  @ManyToOne(() => User, (user) => user.relationshipsReceived, {
     nullable: false,
+    onDelete: 'CASCADE',
   })
   addressee: User;
 
   @Column({
     type: 'enum',
-    enum: FriendStatus,
-    default: FriendStatus.PENDING,
+    enum: RelationStatus,
+    default: RelationStatus.PENDING,
   })
-  status: FriendStatus;
+  status: RelationStatus;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
