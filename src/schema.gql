@@ -91,7 +91,7 @@ type Query {
 
 type Mutation {
   createUser(input: CreateUserInput!): UserOutput!
-  loginUser(username: String!, password: String!): LoginOutput!
+  loginUser(input: LoginInput!): LoginOutput!
   createPost(body: String!): PostOutput!
   updatePost(id: Int!, body: String!): PostOutput
   deletePost(id: Int!): Boolean!
@@ -105,5 +105,10 @@ input CreateUserInput {
   username: String!
   name: String!
   email: String!
+  password: String!
+}
+
+input LoginInput {
+  username: String!
   password: String!
 }

@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { AuthTokenService } from './auth/auth-token.service';
 import { LoginOutput } from './dto/login.output';
 import { UserPaginatedOutput } from './dto/user-paginated.output';
+import { LoginInput } from './dto/login.input';
 
 @Resolver()
 export class UserResolver {
@@ -49,11 +50,11 @@ export class UserResolver {
   }
 
   @Mutation(() => LoginOutput)
-  async loginUser(
-    @Args('username') username: string,
-    @Args('password') password: string,
-  ) {
-    const user = await this.userService.validate(username, password);
+  async loginUser(@Args('input') input: LoginInput): Promise<LoginOutput> {
+    const user = await this.userService.validate(
+      input.username,
+      input.password,
+    );
     if (!user) {
       throw new Error('Invalid credentials');
     }
