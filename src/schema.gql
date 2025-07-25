@@ -4,6 +4,7 @@
 
 type UserOutput {
   id: Int!
+  name: String!
   username: String!
   email: String!
 }
@@ -102,6 +103,7 @@ type Mutation {
 
 input CreateUserInput {
   username: String!
+  name: String!
   email: String!
   password: String!
 }
