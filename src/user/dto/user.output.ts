@@ -6,6 +6,9 @@ export class UserOutput {
   id: number;
 
   @Field()
+  name: string;
+
+  @Field()
   username: string;
 
   @Field()
