@@ -1,4 +1,4 @@
-import { Query, Mutation, Args, Int, Resolver } from '@nestjs/graphql';
+import { Query, Mutation, Args, Int, Resolver, Context } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { UserOutput } from './dto/user.output';
 import { CreateUserInput } from './dto/create-user.input';
@@ -7,6 +7,11 @@ import { AuthTokenService } from './auth/auth-token.service';
 import { LoginOutput } from './dto/login.output';
 import { UserPaginatedOutput } from './dto/user-paginated.output';
 import { LoginInput } from './dto/login.input';
+import { UpdateUserInput } from './dto/update-user.input';
+import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
+import type { FileUpload } from 'graphql-upload/processRequest.mjs';
+import { AuthGuard } from 'src/shared/guards/auth.guard';
+import { UseGuards } from '@nestjs/common';
 
 @Resolver()
 export class UserResolver {
@@ -62,5 +67,16 @@ export class UserResolver {
     const accessToken = await this.authTokenService.createToken(user.id);
 
     return { accessToken };
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => UserOutput)
+  async updateUser(
+    @Args('input') input: UpdateUserInput,
+    @Args({ name: 'image', type: () => GraphQLUpload, nullable: true })
+    image?: Promise<FileUpload>,
+    @Context('req') req?: any,
+  ) {
+    return this.userService.update(input, image, req);
   }
 }

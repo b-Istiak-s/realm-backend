@@ -7,6 +7,7 @@ type UserOutput {
   name: String!
   username: String!
   email: String!
+  image: String
 }
 
 type LoginOutput {
@@ -92,6 +93,7 @@ type Query {
 type Mutation {
   createUser(input: CreateUserInput!): UserOutput!
   loginUser(input: LoginInput!): LoginOutput!
+  updateUser(input: UpdateUserInput!, image: Upload): UserOutput!
   createPost(body: String!): PostOutput!
   updatePost(id: Int!, body: String!): PostOutput
   deletePost(id: Int!): Boolean!
@@ -112,3 +114,12 @@ input LoginInput {
   username: String!
   password: String!
 }
+
+input UpdateUserInput {
+  name: String
+  password: String
+  oldPassword: String
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload

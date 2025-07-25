@@ -13,4 +13,7 @@ export class UserOutput {
 
   @Field()
   email: string;
+
+  @Field({ nullable: true })
+  image: string;
 }
