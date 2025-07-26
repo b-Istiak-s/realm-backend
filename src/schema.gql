@@ -11,6 +11,7 @@ type UserOutput {
 }
 
 type LoginOutput {
+  id: Int!
   accessToken: String!
 }
 

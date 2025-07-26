@@ -66,7 +66,7 @@ export class UserResolver {
 
     const accessToken = await this.authTokenService.createToken(user.id);
 
-    return { accessToken };
+    return { id: user.id, accessToken };
   }
 
   @UseGuards(AuthGuard)
