@@ -9,8 +9,11 @@ export class Post {
   @ManyToOne(() => User, (user) => user.posts, { nullable: false })
   user: User;
 
-  @Column()
+  @Column({ type: 'text' })
   body: string;
+
+  @Column()
+  filePath: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

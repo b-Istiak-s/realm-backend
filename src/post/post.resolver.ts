@@ -1,10 +1,11 @@
 import { Args, Context, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { Post } from './post.entity';
 import { PostService } from './post.service';
 import { PostOutput } from './dto/post.output';
 import { PostPaginatedOutput } from './dto/post-paginated.output';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/shared/guards/auth.guard';
+import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
+import type { FileUpload } from 'graphql-upload/processRequest.mjs';
 
 @Resolver()
 export class PostResolver {
@@ -13,8 +14,10 @@ export class PostResolver {
   // Queries
   @Query(() => PostPaginatedOutput, { name: 'posts' })
   async getPosts(
-    @Args('limit', { type: () => Int, nullable: true, defaultValue: 10 }) limit: number,
-    @Args('offset', { type: () => Int, nullable: true, defaultValue: 0 }) offset: number,
+    @Args('limit', { type: () => Int, nullable: true, defaultValue: 10 })
+    limit: number,
+    @Args('offset', { type: () => Int, nullable: true, defaultValue: 0 })
+    offset: number,
   ): Promise<PostPaginatedOutput> {
     const { posts, total } = await this.postService.getPosts(limit, offset);
     return { posts, total };
@@ -23,10 +26,16 @@ export class PostResolver {
   @Query(() => PostPaginatedOutput, { name: 'postsByUser' })
   async getPostByUserId(
     @Args('userId', { type: () => Int }) userId: number,
-    @Args('limit', { type: () => Int, nullable: true, defaultValue: 10 }) limit: number,
-    @Args('offset', { type: () => Int, nullable: true, defaultValue: 0 }) offset: number,
+    @Args('limit', { type: () => Int, nullable: true, defaultValue: 10 })
+    limit: number,
+    @Args('offset', { type: () => Int, nullable: true, defaultValue: 0 })
+    offset: number,
   ): Promise<PostPaginatedOutput> {
-    const { posts, total } = await this.postService.getPostByUserId(userId, limit, offset);
+    const { posts, total } = await this.postService.getPostByUserId(
+      userId,
+      limit,
+      offset,
+    );
     return { posts, total };
   }
 
@@ -38,8 +47,13 @@ export class PostResolver {
   // Mutations
   @UseGuards(AuthGuard)
   @Mutation(() => PostOutput)
-  async createPost(@Args('body') body: string, @Context('req') req: any) {
-    return this.postService.createPost(body, req);
+  async createPost(
+    @Args('body') body: string,
+    @Args({ name: 'image', type: () => GraphQLUpload, nullable: true })
+    image?: Promise<FileUpload>,
+    @Context('req') req?: any,
+  ) {
+    return this.postService.createPost(body, image, req);
   }
 
   @UseGuards(AuthGuard)

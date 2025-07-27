@@ -8,6 +8,7 @@ import { UpdateUserInput } from './dto/update-user.input';
 import type { FileUpload } from 'graphql-upload/processRequest.mjs';
 import { join } from 'path';
 import { createWriteStream, existsSync, mkdirSync } from 'fs';
+import { fileUpload } from 'src/shared/files/file.upload';
 
 @Injectable()
 export class UserService {
@@ -79,22 +80,10 @@ export class UserService {
         `${user.id}`,
         'images',
       );
-      if (!existsSync(uploadDir)) {
-        mkdirSync(uploadDir, { recursive: true });
-      }
 
       const filenameWithTimestamp = `${Date.now()}-${filename}`;
-      const filePath = join(uploadDir, filenameWithTimestamp);
       const relativePath = `/uploads/users/${user.id}/images/${filenameWithTimestamp}`;
-      const stream = createReadStream();
-      const writeStream = createWriteStream(filePath);
-
-      await new Promise<void>((resolve, reject) => {
-        stream
-          .pipe(writeStream)
-          .on('finish', () => resolve())
-          .on('error', () => reject());
-      });
+      await fileUpload(uploadDir, image);
 
       // Save image path to db (relative to project root)
       user.image = relativePath;
