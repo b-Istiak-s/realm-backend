@@ -14,11 +14,11 @@ export class UserOutput {
   @Field()
   email: string;
 
-  imagePath?: string;
+  image?: string;
 
   @Field(() => String, { nullable: true })
-  get image(): string | null {
-    if (!this.imagePath) return null;
-    return `${process.env.BASE_URL || 'http://localhost:3000'}${this.imagePath}`;
+  get imagePath(): string | null {
+    if (!this.image) return null;
+    return `${process.env.FRONTEND_URL || 'http://localhost:3000'}${this.image}`;
   }
 }
