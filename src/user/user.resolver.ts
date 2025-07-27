@@ -12,6 +12,10 @@ import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
 import type { FileUpload } from 'graphql-upload/processRequest.mjs';
 import { AuthGuard } from 'src/shared/guards/auth.guard';
 import { UseGuards } from '@nestjs/common';
+import {
+  toUserOutput,
+  toUserPaginatedOutput,
+} from './helper/user-output.helper';
 
 @Resolver()
 export class UserResolver {
@@ -32,18 +36,18 @@ export class UserResolver {
       limit,
       offset,
     });
-    return { users, total };
+    return toUserPaginatedOutput({ users, total });
   }
 
   @Query(() => UserOutput, { name: 'user', nullable: true })
   async getUser(@Args('id', { type: () => Int }) id: number) {
-    return this.userService.findOne(id);
+    return toUserOutput(await this.userService.findOne(id));
   }
 
   // Mutations
   @Mutation(() => UserOutput)
   async createUser(@Args('input') input: CreateUserInput) {
-    return this.userService.create(input);
+    return toUserOutput(await this.userService.create(input));
   }
 
   @Mutation(() => LoginOutput)
@@ -69,6 +73,6 @@ export class UserResolver {
     image?: Promise<FileUpload>,
     @Context('req') req?: any,
   ) {
-    return this.userService.update(input, image, req);
+    return toUserOutput(await this.userService.update(input, image, req));
   }
 }

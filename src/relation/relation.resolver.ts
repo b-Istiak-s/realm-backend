@@ -4,6 +4,10 @@ import { RelationOutput } from './dto/relation.output';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/shared/guards/auth.guard';
 import { RelationPaginatedOutput } from './dto/relation-paginated.output';
+import {
+  toRelationOutput,
+  toRelationPaginatedOutput,
+} from './helper/relation-output.helper';
 
 @UseGuards(AuthGuard)
 @Resolver()
@@ -13,11 +17,18 @@ export class RelationResolver {
   @Query(() => RelationPaginatedOutput, { name: 'relationships' })
   async getRelationships(
     @Args('userId', { type: () => Int }) userId: number,
-    @Args('limit', { type: () => Int, nullable: true, defaultValue: 10 }) limit: number,
-    @Args('offset', { type: () => Int, nullable: true, defaultValue: 0 }) offset: number,
+    @Args('limit', { type: () => Int, nullable: true, defaultValue: 10 })
+    limit: number,
+    @Args('offset', { type: () => Int, nullable: true, defaultValue: 0 })
+    offset: number,
   ): Promise<RelationPaginatedOutput> {
-    const { relationships, total } = await this.relationService.getRelationshipsByUserId(userId, limit, offset);
-    return { relationships, total };
+    const { relationships, total } =
+      await this.relationService.getRelationshipsByUserId(
+        userId,
+        limit,
+        offset,
+      );
+    return toRelationPaginatedOutput({ relationships, total });
   }
 
   @Mutation(() => RelationOutput)
@@ -25,7 +36,9 @@ export class RelationResolver {
     @Args('addresseeId', { type: () => Int }) addresseeId: number,
     @Context('req') req: any,
   ) {
-    return this.relationService.createRelationship(addresseeId, req);
+    return toRelationOutput(
+      await this.relationService.createRelationship(addresseeId, req),
+    );
   }
 
   @Mutation(() => RelationOutput)
@@ -33,6 +46,8 @@ export class RelationResolver {
     @Args('id', { type: () => Int }) id: number,
     @Args('status') status: string,
   ) {
-    return this.relationService.updateRelationshipStatus(id, status);
+    return toRelationOutput(
+      await this.relationService.updateRelationshipStatus(id, status),
+    );
   }
-} 
+}

@@ -1,9 +1,9 @@
 import { Args, Query, Resolver, Int } from '@nestjs/graphql';
 import { ChatMessageService } from './chat-message.service';
-import { ChatMessageOutput } from './dto/chat-message.output';
 import { AuthGuard } from 'src/shared/guards/auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { ChatMessagePaginatedOutput } from './dto/chat-message-paginated.output';
+import { toChatMessagePaginatedOutput } from './helper/chat-message-output.helper';
 
 @UseGuards(AuthGuard)
 @Resolver()
@@ -20,6 +20,6 @@ export class ChatMessageResolver {
   ): Promise<ChatMessagePaginatedOutput> {
     const { messages, total } =
       await this.chatMessageService.getMessagesByChatId(chatId, limit, offset);
-    return { messages, total };
+    return toChatMessagePaginatedOutput({ messages, total });
   }
 }

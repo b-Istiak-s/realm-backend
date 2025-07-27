@@ -4,6 +4,10 @@ import { ChatOutput } from './dto/chat.output';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/shared/guards/auth.guard';
 import { ChatPaginatedOutput } from './dto/chat-paginated.output';
+import {
+  toChatOutput,
+  toChatPaginatedOutput,
+} from './helper/chat-output.helper';
 
 @UseGuards(AuthGuard)
 @Resolver()
@@ -13,11 +17,17 @@ export class ChatResolver {
   @Query(() => ChatPaginatedOutput, { name: 'chats' })
   async getChatsByUserId(
     @Args('userId') userId: number,
-    @Args('limit', { type: () => Int, nullable: true, defaultValue: 10 }) limit: number,
-    @Args('offset', { type: () => Int, nullable: true, defaultValue: 0 }) offset: number,
+    @Args('limit', { type: () => Int, nullable: true, defaultValue: 10 })
+    limit: number,
+    @Args('offset', { type: () => Int, nullable: true, defaultValue: 0 })
+    offset: number,
   ): Promise<ChatPaginatedOutput> {
-    const { chats, total } = await this.chatService.getChatsByUserId(userId, limit, offset);
-    return { chats, total };
+    const { chats, total } = await this.chatService.getChatsByUserId(
+      userId,
+      limit,
+      offset,
+    );
+    return toChatPaginatedOutput({ chats, total });
   }
 
   @Mutation(() => ChatOutput)
@@ -25,7 +35,7 @@ export class ChatResolver {
     @Args('chatReceiverId') chatReceiverId: number,
     @Context('req') req: any,
   ): Promise<ChatOutput | null> {
-    return this.chatService.createChat(chatReceiverId, req);
+    return toChatOutput(await this.chatService.createChat(chatReceiverId, req));
   }
 
   @Mutation(() => ChatOutput)
@@ -34,6 +44,8 @@ export class ChatResolver {
     @Args('lastMessage') lastMessage: string,
     @Args('lastMessageSenderId') lastMessageSenderId: number,
   ): Promise<ChatOutput> {
-    return this.chatService.updateChat(id, lastMessage, lastMessageSenderId);
+    return toChatOutput(
+      await this.chatService.updateChat(id, lastMessage, lastMessageSenderId),
+    );
   }
 }
