@@ -63,7 +63,13 @@ export class UserService {
     if (image) {
       const { filename, createReadStream } = await image;
 
-      const uploadDir = join(process.cwd(), 'uploads', 'user-images');
+      const uploadDir = join(
+        process.cwd(),
+        'uploads',
+        'users',
+        `${user.id}`,
+        'images',
+      );
       if (!existsSync(uploadDir)) {
         mkdirSync(uploadDir, { recursive: true });
       }

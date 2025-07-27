@@ -8,9 +8,15 @@ import { RelationModule } from './relation/relation.module';
 import { ChatModule } from './chat/chat.module';
 import { ChatMessageModule } from './chat-message/chat-message.module';
 import { AuthModule } from './shared/guards/auth.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(process.cwd(), 'uploads'),
+      serveRoot: '/uploads', // this becomes your public URL prefix
+    }),
     DatabaseModule,
     GraphQLModule.forRoot(graphqlConfig),
     UserModule,
