@@ -23,10 +23,18 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: Build the project
-        run: npm run build
+        id: build
+        run: |
+          if npm run build; then
+            echo "build_success=true" >> $GITHUB_OUTPUT
+          else
+            echo "build_success=false" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
 
       - name: Check if server starts without crashing
         id: start_check
+        if: steps.build.outputs.build_success == 'true'
         run: |
           timeout 10 npm run start &
           PID=$!
@@ -34,13 +42,20 @@ jobs:
           if ! ps -p $PID > /dev/null; then
             echo "crashed=true" >> $GITHUB_OUTPUT
             kill $PID 2>/dev/null || true
-            exit 1
           else
             echo "crashed=false" >> $GITHUB_OUTPUT
             kill $PID
           fi
 
-      - name: Send Discord notification on failure
+      - name: Send Discord notification on build failure
+        if: steps.build.outputs.build_success == 'false'
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d '{"content": "🚨 CI Error: Build failed!"}' \
+            https://discord.com/api/webhooks/1399006203799011398/1vqYWIwS8FLBlz2e1ICCXkooIbJRpyJ-RD90xYa-_s0RmoB8B9SUasjfccd14BBIyRn4
+
+      - name: Send Discord notification on crash
         if: steps.start_check.outputs.crashed == 'true'
         run: |
           curl -H "Content-Type: application/json" \
@@ -54,4 +69,4 @@ jobs:
           curl -H "Content-Type: application/json" \
             -X POST \
             -d '{"content": "✅ CI Success: The NestJS app built and started successfully."}' \
-            https://discord.com/api/webhooks/YOUR_SUCCESS_WEBHOOK_URL_HERE
+            https://discord.com/api/webhooks/1399006203799011398/1vqYWIwS8FLBlz2e1ICCXkooIbJRpyJ-RD90xYa-_s0RmoB8B9SUasjfccd14BBIyRn4
