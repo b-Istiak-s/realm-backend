@@ -14,6 +14,11 @@ export class UserOutput {
   @Field()
   email: string;
 
-  @Field({ nullable: true })
-  image: string;
+  imagePath?: string;
+
+  @Field(() => String, { nullable: true })
+  get image(): string | null {
+    if (!this.imagePath) return null;
+    return `${process.env.BASE_URL || 'http://localhost:3000'}${this.imagePath}`;
+  }
 }

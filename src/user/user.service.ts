@@ -35,7 +35,16 @@ export class UserService {
   }
 
   async create(input: CreateUserInput): Promise<User> {
-    const user = this.userRepo.create(input);
+    const hashedPassword = await bcrypt.hash(input.password, 10); // 10 = salt rounds
+
+    const newUser = {
+      username: input.username,
+      name: input.name,
+      email: input.email,
+      password: hashedPassword,
+    };
+
+    const user = this.userRepo.create(newUser);
     return this.userRepo.save(user);
   }
 
@@ -91,7 +100,14 @@ export class UserService {
       user.image = relativePath;
     }
 
-    Object.assign(user, input);
+    const { password, oldPassword, ...rest } = input;
+
+    if (password) {
+      user.password = await bcrypt.hash(password, 10);
+    }
+    user.name = input.name || user.name;
+    console.log('Updating user:', user, input, password, oldPassword);
+
     return this.userRepo.save(user);
   }
 }
