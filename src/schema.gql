@@ -8,6 +8,7 @@ type UserOutput {
   username: String!
   email: String!
   image: String
+  imagePath: String
 }
 
 type LoginOutput {
@@ -68,8 +69,6 @@ type ChatPaginatedOutput {
 
 type ChatMessageOutput {
   id: Int!
-  chat: ChatOutput!
-  sender: UserOutput!
   message: String!
   createdAt: DateTime!
   updatedAt: DateTime!
