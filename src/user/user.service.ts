@@ -56,7 +56,7 @@ export class UserService {
     if (!user) {
       throw new Error('User not found');
     }
-    if (!this.validate(user.username, input.oldPassword)) {
+    if (!(await this.validate(user.username, input.oldPassword))) {
       throw new Error('Old password is incorrect');
     }
 
@@ -74,7 +74,9 @@ export class UserService {
         mkdirSync(uploadDir, { recursive: true });
       }
 
-      const filePath = join(uploadDir, `${Date.now()}-${filename}`);
+      const filenameWithTimestamp = `${Date.now()}-${filename}`;
+      const filePath = join(uploadDir, filenameWithTimestamp);
+      const relativePath = `/uploads/users/${user.id}/images/${filenameWithTimestamp}`;
       const stream = createReadStream();
       const writeStream = createWriteStream(filePath);
 
@@ -84,6 +86,9 @@ export class UserService {
           .on('finish', () => resolve())
           .on('error', () => reject());
       });
+
+      // Save image path to db (relative to project root)
+      user.image = relativePath;
     }
 
     Object.assign(user, input);
