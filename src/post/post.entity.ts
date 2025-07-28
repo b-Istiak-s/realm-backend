@@ -12,7 +12,7 @@ export class Post {
   @Column({ type: 'text' })
   body: string;
 
-  @Column()
+  @Column({ nullable: true })
   filePath: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

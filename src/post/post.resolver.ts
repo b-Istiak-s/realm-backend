@@ -50,10 +50,10 @@ export class PostResolver {
   async createPost(
     @Args('body') body: string,
     @Args({ name: 'image', type: () => GraphQLUpload, nullable: true })
-    image?: Promise<FileUpload>,
+    file?: Promise<FileUpload>,
     @Context('req') req?: any,
   ) {
-    return this.postService.createPost(body, image, req);
+    return this.postService.createPost(body, file, req);
   }
 
   @UseGuards(AuthGuard)

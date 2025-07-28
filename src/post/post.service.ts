@@ -15,14 +15,14 @@ export class PostService {
 
   async createPost(
     body: string,
-    image?: Promise<FileUpload> | undefined,
+    file?: Promise<FileUpload> | undefined,
     req?: any,
   ): Promise<Post> {
     const post = this.postRepo.create({ body: body, user: { id: req.userId } });
 
-    // Handle file upload if an image is provided
-    if (image) {
-      const { createReadStream, filename } = await image;
+    // Handle file upload if an file is provided
+    if (file) {
+      const { createReadStream, filename } = await file;
 
       const uploadDir = join(
         process.cwd(),
@@ -34,7 +34,7 @@ export class PostService {
 
       const filenameWithTimestamp = `${Date.now()}-${filename}`;
       const relativePath = `/uploads/users/${req.userId}/posts/${filenameWithTimestamp}`;
-      await fileUpload(uploadDir, image);
+      await fileUpload(uploadDir, file);
 
       post.filePath = relativePath;
     }

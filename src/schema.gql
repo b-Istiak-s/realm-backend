@@ -24,7 +24,7 @@ type UserPaginatedOutput {
 type PostOutput {
   id: Int!
   body: String!
-  filePath: String!
+  filePath: String
   createdAt: DateTime!
   updatedAt: DateTime!
 }

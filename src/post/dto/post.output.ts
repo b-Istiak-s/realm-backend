@@ -8,8 +8,8 @@ export class PostOutput {
   @Field()
   body: string;
 
-  @Field()
-  filePath: string;
+  @Field({ nullable: true })
+  filePath?: string;
 
   @Field(() => Date)
   createdAt: Date;
