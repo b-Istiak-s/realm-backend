@@ -95,7 +95,7 @@ type Mutation {
   createUser(input: CreateUserInput!): UserOutput!
   loginUser(input: LoginInput!): LoginOutput!
   updateUser(input: UpdateUserInput!, image: Upload): UserOutput!
-  createPost(body: String!, image: Upload): PostOutput!
+  createPost(body: String!, file: Upload): PostOutput!
   updatePost(id: Int!, body: String!): PostOutput
   deletePost(id: Int!): Boolean!
   createRelationship(addresseeId: Int!): RelationOutput!

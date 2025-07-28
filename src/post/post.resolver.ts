@@ -49,7 +49,7 @@ export class PostResolver {
   @Mutation(() => PostOutput)
   async createPost(
     @Args('body') body: string,
-    @Args({ name: 'image', type: () => GraphQLUpload, nullable: true })
+    @Args({ name: 'file', type: () => GraphQLUpload, nullable: true })
     file?: Promise<FileUpload>,
     @Context('req') req?: any,
   ) {
