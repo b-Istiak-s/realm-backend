@@ -11,6 +11,12 @@ export class PostOutput {
   @Field({ nullable: true })
   filePath?: string;
 
+  @Field(() => String, { nullable: true })
+  get fileUrl(): string | null {
+    if (!this.filePath) return null;
+    return `${process.env.BASE_URL || 'http://localhost:3000'}${this.filePath}`;
+  }
+
   @Field(() => Date)
   createdAt: Date;
 

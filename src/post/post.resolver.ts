@@ -6,6 +6,10 @@ import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/shared/guards/auth.guard';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
 import type { FileUpload } from 'graphql-upload/processRequest.mjs';
+import {
+  toPostOutput,
+  toPostPaginatedOutput,
+} from './helper/post-output.helper';
 
 @Resolver()
 export class PostResolver {
@@ -20,7 +24,7 @@ export class PostResolver {
     offset: number,
   ): Promise<PostPaginatedOutput> {
     const { posts, total } = await this.postService.getPosts(limit, offset);
-    return { posts, total };
+    return toPostPaginatedOutput({ posts, total });
   }
 
   @Query(() => PostPaginatedOutput, { name: 'postsByUser' })
@@ -36,12 +40,14 @@ export class PostResolver {
       limit,
       offset,
     );
-    return { posts, total };
+    return toPostPaginatedOutput({ posts, total });
   }
 
   @Query(() => PostOutput, { name: 'post', nullable: true })
   async getPost(@Args('id', { type: () => Int }) id: number) {
-    return this.postService.getPostById(id);
+    const post = await this.postService.getPostById(id);
+    if (!post) return null;
+    return toPostOutput(post);
   }
 
   // Mutations
@@ -53,7 +59,7 @@ export class PostResolver {
     file?: Promise<FileUpload>,
     @Context('req') req?: any,
   ) {
-    return this.postService.createPost(body, file, req);
+    return toPostOutput(await this.postService.createPost(body, file, req));
   }
 
   @UseGuards(AuthGuard)
@@ -62,7 +68,9 @@ export class PostResolver {
     @Args('id', { type: () => Int }) id: number,
     @Args('body') body: string,
   ) {
-    return this.postService.updatePost(id, body);
+    const post = await this.postService.getPostById(id);
+    if (!post) return null;
+    return toPostOutput(post);
   }
 
   @UseGuards(AuthGuard)

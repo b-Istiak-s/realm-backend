@@ -25,6 +25,7 @@ type PostOutput {
   id: Int!
   body: String!
   filePath: String
+  fileUrl: String
   createdAt: DateTime!
   updatedAt: DateTime!
 }
