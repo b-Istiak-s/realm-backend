@@ -16,14 +16,14 @@ export class ChatResolver {
 
   @Query(() => ChatPaginatedOutput, { name: 'chats' })
   async getChatsByUserId(
-    @Args('userId') userId: number,
     @Args('limit', { type: () => Int, nullable: true, defaultValue: 10 })
     limit: number,
     @Args('offset', { type: () => Int, nullable: true, defaultValue: 0 })
     offset: number,
+    @Context('req') req?: any,
   ): Promise<ChatPaginatedOutput> {
     const { chats, total } = await this.chatService.getChatsByUserId(
-      userId,
+      req.userId,
       limit,
       offset,
     );

@@ -15,7 +15,7 @@ export class ChatMessageService {
     chatId: number,
     senderId: number,
     message: string,
-  ): Promise<ChatMessageOutput> {
+  ): Promise<ChatMessage> {
     const chatMessage = this.chatMessageRepository.create({
       chat: { id: chatId },
       sender: { id: senderId },

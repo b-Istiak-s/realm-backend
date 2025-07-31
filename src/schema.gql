@@ -71,6 +71,7 @@ type ChatPaginatedOutput {
 
 type ChatMessageOutput {
   id: Int!
+  sender: UserOutput!
   message: String!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -88,7 +89,7 @@ type Query {
   postsByUser(userId: Int!, limit: Int = 10, offset: Int = 0): PostPaginatedOutput!
   post(id: Int!): PostOutput
   relationships(userId: Int!, limit: Int = 10, offset: Int = 0): RelationPaginatedOutput!
-  chats(userId: Float!, limit: Int = 10, offset: Int = 0): ChatPaginatedOutput!
+  chats(limit: Int = 10, offset: Int = 0): ChatPaginatedOutput!
   chatMessages(chatId: Float!, limit: Int = 10, offset: Int = 0): ChatMessagePaginatedOutput!
 }
 
