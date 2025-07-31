@@ -4,9 +4,11 @@ import { ChatMessageResolver } from './chat-message.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChatMessage } from './chat-message.entity';
 import { AuthModule } from 'src/shared/guards/auth.module';
+import { ChatGateway } from './chat-message.gateway';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ChatMessage]), AuthModule],
-  providers: [ChatMessageService, ChatMessageResolver],
+  providers: [ChatMessageService, ChatMessageResolver, ChatGateway],
+  exports: [ChatGateway],
 })
 export class ChatMessageModule {}

@@ -12,7 +12,7 @@ export class ChatMessageResolver {
 
   @Query(() => ChatMessagePaginatedOutput, { name: 'chatMessages' })
   async getChatMessageByChatId(
-    @Args('chatId') chatId: number,
+    @Args('chatId', { type: () => Int }) chatId: number,
     @Args('limit', { type: () => Int, nullable: true, defaultValue: 10 })
     limit: number,
     @Args('offset', { type: () => Int, nullable: true, defaultValue: 0 })

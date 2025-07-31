@@ -90,7 +90,7 @@ type Query {
   post(id: Int!): PostOutput
   relationships(userId: Int!, limit: Int = 10, offset: Int = 0): RelationPaginatedOutput!
   chats(limit: Int = 10, offset: Int = 0): ChatPaginatedOutput!
-  chatMessages(chatId: Float!, limit: Int = 10, offset: Int = 0): ChatMessagePaginatedOutput!
+  chatMessages(chatId: Int!, limit: Int = 10, offset: Int = 0): ChatMessagePaginatedOutput!
 }
 
 type Mutation {
