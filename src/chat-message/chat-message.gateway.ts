@@ -7,6 +7,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatMessageService } from './chat-message.service';
+import { ConnectedSocket } from '@nestjs/websockets';
 
 @WebSocketGateway({ cors: true })
 export class ChatGateway implements OnGatewayConnection {
@@ -16,7 +17,7 @@ export class ChatGateway implements OnGatewayConnection {
   constructor(private readonly ChatMessageService: ChatMessageService) {}
 
   handleConnection(client: Socket) {
-    console.log(`Client connected: ${client.id}`);
+    // console.log(`Client connected: ${client.id}`);
   }
 
   @SubscribeMessage('send_message')
@@ -34,14 +35,33 @@ export class ChatGateway implements OnGatewayConnection {
       payload.message,
     );
 
-    this.server
-      .to('chat_' + String(payload.chatId))
-      .emit('receive_message', savedMessage);
-    return savedMessage;
+    // Emit with consistent structure
+    this.server.to(`chat_${payload.chatId}`).emit('receive_message', {
+      id: savedMessage.id,
+      message: savedMessage.message,
+      createdAt: savedMessage.createdAt,
+      sender: {
+        id: savedMessage.sender.id,
+        name: savedMessage.sender.name,
+      },
+    });
+
+    return savedMessage; // For acknowledgement if needed
   }
 
   @SubscribeMessage('join_chat')
-  handleJoinRoom(@MessageBody() chatId: number, client: Socket) {
-    client.join('chat_' + String(chatId));
+  handleJoinRoom(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() chatId: number,
+  ) {
+    client.join(`chat_${chatId}`);
+  }
+
+  @SubscribeMessage('leave_chat')
+  handleLeaveRoom(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() chatId: number,
+  ) {
+    client.leave(`chat_${chatId}`);
   }
 }
