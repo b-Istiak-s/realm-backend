@@ -24,11 +24,19 @@ export class RelationService {
 
   async getRelationshipsByUserId(
     userId: number,
+    status: string,
     limit: number,
     offset: number,
   ): Promise<{ relationships: Relation[]; total: number }> {
+    if (!Object.values(RelationStatus).includes(status as RelationStatus)) {
+      throw new BadRequestException('Invalid relationship status');
+    }
     const [relationships, total] = await this.relationRepository.findAndCount({
-      where: [{ requester: { id: userId } }, { addressee: { id: userId } }],
+      where: [
+        { requester: { id: userId } },
+        { addressee: { id: userId } },
+        { status: status as RelationStatus },
+      ],
       relations: ['requester', 'addressee'],
       take: limit,
       skip: offset,

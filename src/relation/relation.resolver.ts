@@ -16,15 +16,17 @@ export class RelationResolver {
 
   @Query(() => RelationPaginatedOutput, { name: 'relationships' })
   async getRelationships(
-    @Args('userId', { type: () => Int }) userId: number,
+    @Args('status') status: string,
     @Args('limit', { type: () => Int, nullable: true, defaultValue: 10 })
     limit: number,
     @Args('offset', { type: () => Int, nullable: true, defaultValue: 0 })
     offset: number,
+    @Context('req') req?: any,
   ): Promise<RelationPaginatedOutput> {
     const { relationships, total } =
       await this.relationService.getRelationshipsByUserId(
-        userId,
+        req.userId,
+        status,
         limit,
         offset,
       );
