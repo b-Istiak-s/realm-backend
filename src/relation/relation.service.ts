@@ -8,12 +8,14 @@ import {
 import { Repository } from 'typeorm';
 import { Relation, RelationStatus } from './relation.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ChatService } from 'src/chat/chat.service';
 
 @Injectable()
 export class RelationService {
   constructor(
     @InjectRepository(Relation)
     private readonly relationRepository: Repository<Relation>,
+    private readonly chatService: ChatService,
   ) {}
 
   async getRelationshipById(id: number): Promise<Relation | null> {
@@ -85,6 +87,7 @@ export class RelationService {
   async updateRelationshipStatus(
     id: number,
     status: string,
+    req: any,
   ): Promise<Relation | null> {
     const relationship = await this.relationRepository.findOneBy({ id });
     if (!relationship) {
@@ -93,8 +96,28 @@ export class RelationService {
     if (!Object.values(RelationStatus).includes(status as RelationStatus)) {
       throw new BadRequestException('Invalid relationship status');
     }
+    const userId = req.user?.id || req.userId;
+    if (
+      relationship.addressee.id !== userId &&
+      relationship.requester.id !== userId
+    ) {
+      throw new ForbiddenException(
+        'You do not have permission to delete this relationship',
+      );
+    }
+
     relationship.status = status as RelationStatus;
     await this.relationRepository.save(relationship);
+
+    // create chat when relationship are approved
+    if (status === RelationStatus.ACCEPTED) {
+      await this.chatService.createChat(
+        relationship.requester.id === userId
+          ? relationship.addressee.id
+          : relationship.requester.id,
+        req,
+      );
+    }
 
     return this.getRelationshipById(relationship.id);
   }

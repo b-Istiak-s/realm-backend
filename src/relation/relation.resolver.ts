@@ -47,9 +47,10 @@ export class RelationResolver {
   async updateRelationshipStatus(
     @Args('id', { type: () => Int }) id: number,
     @Args('status') status: string,
+    @Context('req') req: any,
   ) {
     return toRelationOutput(
-      await this.relationService.updateRelationshipStatus(id, status),
+      await this.relationService.updateRelationshipStatus(id, status, req),
     );
   }
 
