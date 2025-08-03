@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -98,10 +99,24 @@ export class RelationService {
     return this.getRelationshipById(relationship.id);
   }
 
-  async deleteRelationship(id: number): Promise<void> {
-    const relationship = await this.relationRepository.findOneBy({ id });
+  async deleteRelationship(id: number, req: any): Promise<void> {
+    const relationship = await this.relationRepository.findOne({
+      where: { id },
+      relations: ['addressee', 'requester'],
+    });
+
     if (!relationship) {
       throw new NotFoundException('Relationship not found');
+    }
+    const userId = req.user?.id || req.userId;
+
+    if (
+      relationship.addressee.id !== userId &&
+      relationship.requester.id !== userId
+    ) {
+      throw new ForbiddenException(
+        'You do not have permission to delete this relationship',
+      );
     }
 
     await this.relationRepository.delete({ id });

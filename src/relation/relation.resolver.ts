@@ -54,8 +54,11 @@ export class RelationResolver {
   }
 
   @Mutation(() => Boolean)
-  async deleteRelationship(@Args('id', { type: () => Int }) id: number) {
-    await this.relationService.deleteRelationship(id);
+  async deleteRelationship(
+    @Args('id', { type: () => Int }) id: number,
+    @Context('req') req: any,
+  ) {
+    await this.relationService.deleteRelationship(id, req);
 
     return true;
   }
