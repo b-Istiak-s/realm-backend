@@ -102,6 +102,7 @@ type Mutation {
   deletePost(id: Int!): Boolean!
   createRelationship(addresseeId: Int!): RelationOutput!
   updateRelationshipStatus(id: Int!, status: String!): RelationOutput!
+  deleteRelationship(id: Int!): Boolean!
   createChat(chatReceiverId: Float!): ChatOutput!
   updateChat(id: Float!, lastMessage: String!, lastMessageSenderId: Float!): ChatOutput!
 }

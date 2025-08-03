@@ -52,4 +52,11 @@ export class RelationResolver {
       await this.relationService.updateRelationshipStatus(id, status),
     );
   }
+
+  @Mutation(() => Boolean)
+  async deleteRelationship(@Args('id', { type: () => Int }) id: number) {
+    await this.relationService.deleteRelationship(id);
+
+    return true;
+  }
 }

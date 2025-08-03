@@ -97,4 +97,13 @@ export class RelationService {
 
     return this.getRelationshipById(relationship.id);
   }
+
+  async deleteRelationship(id: number): Promise<void> {
+    const relationship = await this.relationRepository.findOneBy({ id });
+    if (!relationship) {
+      throw new NotFoundException('Relationship not found');
+    }
+
+    await this.relationRepository.delete({ id });
+  }
 }
