@@ -9,5 +9,6 @@ import { AuthModule } from 'src/shared/guards/auth.module';
 @Module({
   imports: [TypeOrmModule.forFeature([Chat, User]), AuthModule],
   providers: [ChatService, ChatResolver],
+  exports: [ChatService],
 })
 export class ChatModule {}

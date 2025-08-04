@@ -22,8 +22,14 @@ export class PostResolver {
     limit: number,
     @Args('offset', { type: () => Int, nullable: true, defaultValue: 0 })
     offset: number,
+    @Args('type', { type: () => String, defaultValue: 'all' })
+    type: String,
   ): Promise<PostPaginatedOutput> {
-    const { posts, total } = await this.postService.getPosts(limit, offset);
+    const { posts, total } = await this.postService.getPosts(
+      limit,
+      offset,
+      type,
+    );
     return toPostPaginatedOutput({ posts, total });
   }
 

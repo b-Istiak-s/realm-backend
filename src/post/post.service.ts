@@ -45,6 +45,7 @@ export class PostService {
   async getPosts(
     limit: number,
     offset: number,
+    type: String,
   ): Promise<{ posts: Post[]; total: number }> {
     const [posts, total] = await this.postRepo.findAndCount({
       take: limit,
