@@ -16,8 +16,8 @@ export class PostResolver {
   constructor(private readonly postService: PostService) {}
 
   // Queries
-  @Query(() => PostPaginatedOutput, { name: 'posts' })
-  async getPosts(
+  @Query(() => PostPaginatedOutput, { name: 'postsByType' })
+  async getPostsByType(
     @Args('limit', { type: () => Int, nullable: true, defaultValue: 10 })
     limit: number,
     @Args('offset', { type: () => Int, nullable: true, defaultValue: 0 })
@@ -25,7 +25,7 @@ export class PostResolver {
     @Args('type', { type: () => String, defaultValue: 'all' })
     type: String,
   ): Promise<PostPaginatedOutput> {
-    const { posts, total } = await this.postService.getPosts(
+    const { posts, total } = await this.postService.getPostsByType(
       limit,
       offset,
       type,

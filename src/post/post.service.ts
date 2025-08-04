@@ -42,15 +42,27 @@ export class PostService {
     return this.postRepo.save(post);
   }
 
-  async getPosts(
+  async getPostsByType(
     limit: number,
     offset: number,
     type: String,
   ): Promise<{ posts: Post[]; total: number }> {
-    const [posts, total] = await this.postRepo.findAndCount({
-      take: limit,
-      skip: offset,
-    });
+    const query = this.postRepo.createQueryBuilder('post');
+
+    if (type === 'photo') {
+      query.andWhere(`post.filePath ~* '\\.(jpg|jpeg|png|gif|webp|bmp)$'`);
+    } else if (type === 'video') {
+      query.andWhere(`post.filePath ~* '\\.(mp4|webm|mov|avi|mkv)$'`);
+    } else if (type === 'text') {
+      query.andWhere('post.filePath IS NULL');
+    }
+
+    const [posts, total] = await query
+      .take(limit)
+      .skip(offset)
+      .orderBy('post.createdAt', 'DESC')
+      .getManyAndCount();
+
     return { posts, total };
   }
 
