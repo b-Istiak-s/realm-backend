@@ -50,9 +50,11 @@ export class PostService {
     const query = this.postRepo.createQueryBuilder('post');
 
     if (type === 'photo') {
-      query.andWhere(`post.filePath ~* '\\.(jpg|jpeg|png|gif|webp|bmp)$'`);
+      query.andWhere(
+        `post.filePath REGEXP '\\\\.(jpg|jpeg|png|gif|webp|bmp)$'`,
+      );
     } else if (type === 'video') {
-      query.andWhere(`post.filePath ~* '\\.(mp4|webm|mov|avi|mkv)$'`);
+      query.andWhere(`post.filePath REGEXP '\\\\.(mp4|webm|mov|avi|mkv)$'`);
     } else if (type === 'text') {
       query.andWhere('post.filePath IS NULL');
     }
